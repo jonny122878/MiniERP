@@ -166,6 +166,7 @@ namespace MiniERP
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            //this.RollBackMSSQL();
             //if (ConfigurationManager.AppSettings["IsTest"] == "1")
             //{
             //    this.RollBackMSSQL();
@@ -226,11 +227,11 @@ namespace MiniERP
             this.dataGridView1.Columns[5].ReadOnly = true;
 
 
-            var focus = dataGridView1.CurrentCell.RowIndex;
-            this.dataGridView1.Rows[focus].ReadOnly = false;
+            //var focus = dataGridView1.CurrentCell.RowIndex;
+            //this.dataGridView1.Rows[focus].ReadOnly = false;
 
-            this.dataGridView1.Rows[1].ReadOnly = true;
-            this.dataGridView1.Rows[2].ReadOnly = true;
+            //this.dataGridView1.Rows[1].ReadOnly = true;
+            //this.dataGridView1.Rows[2].ReadOnly = true;
 
 
             Console.WriteLine();
@@ -265,59 +266,135 @@ namespace MiniERP
 
             //string result = strTest.ToString();
             Console.WriteLine("");
-
+            this.bindingSource1.EndEdit();
             var dialogResult = CannedMessage.DoubleCheck("是否儲存變更?");           
 
             System.Data.DataTable dtUpdate = (System.Data.DataTable)this.bindingSource1.DataSource;
 
-            //防呆客戶編號為有重複值
+            dtUpdate.AcceptChanges();
+
+            #region 防呆客戶編號為有重複值
             if (dtUpdate.AsEnumerable().GroupBy(r => r.Field<string>("CustomerCode"))
-                .Any(r => r.Count() > 1)
-                )
+                    .Any(r => r.Count() > 1)
+                    )
             {
                 var customerID = dtUpdate.AsEnumerable().GroupBy(r => r.Field<string>("CustomerCode")).
                 Where(r => r.Count() > 1).First().Key;
                 MessageBox.Show(customerID + "有重複值");
                 return;
             }
-
+            #endregion
+            Console.WriteLine("");
+            #region 防呆資料有含空白
             var rows = dtUpdate.AsEnumerable().Select((r, idx) =>
-            {
-                var lists = r.ItemArray.Select(c =>
                 {
-                    var val = (c == null) ?"":c.ToString();
-                    return val;
+                    //take5 最後變更時間不檢查
+                    var lists = r.ItemArray.Take(5).Select(c =>
+                    {
+                        var val = (c == null) ? "" : c.ToString();
+                        return val;
+                    }).ToList();
+                    return new Tuple<int, List<string>>(idx + 1, lists);
                 }).ToList();
-                return new Tuple<int, List<string>>(idx + 1, lists);
-            }).ToList();
             var validRows = rows.FirstOrDefault(c => c.Item2.Any(cc => cc == ""));
 
-            if(validRows != null)
+            if (validRows != null)
             {
-                MessageBox.Show("第" + validRows.Item1.ToString() +"列含有空白資料");
+                MessageBox.Show("第" + validRows.Item1.ToString() + "列含有空白資料");
                 return;
             }
-                
-            
 
+            #endregion
+            Console.WriteLine("");
 
-            dtUpdate.AcceptChanges();
-
-            
-            //要和資料庫做差異比對刷新最後更新時間
-
-            for (int i = 0; i < dtUpdate.Rows.Count; i++)
-            {
-                dtUpdate.Rows[i][5] = DateTime.Now;
-            }
-
-            
-            var deleteAllSQL = @"Delete FROM [Customer]";      
-            this._dbContext.ExcuteBulkCopy(deleteAllSQL,
-                new List<Tuple<string, System.Data.DataTable>>
+            #region 找出要更新資料
+            var customerSQL = "SELECT * FROM Customer";
+            var dtCustomer = this._dbContext.Select(customerSQL);
+            var dbCustomers = dtCustomer.AsEnumerable().
+                Select(r => new CustomerModel
                 {
-                    new Tuple<string, System.Data.DataTable>("Customer",dtUpdate)
-                });
+                    Customer = r.Field<string>("Customer"),
+                    CustomerCode = r.Field<string>("CustomerCode"),
+                    Address = r.Field<string>("Address"),
+                    Email = r.Field<string>("Email"),
+                    Telephone = r.Field<string>("Telephone"),
+                }).ToList();
+
+
+            var updateCustomers = dtUpdate.AsEnumerable().
+                Select(r => new CustomerModel
+                {
+                    Customer = r.Field<string>("Customer"),
+                    CustomerCode = r.Field<string>("CustomerCode"),
+                    Address = r.Field<string>("Address"),
+                    Email = r.Field<string>("Email"),
+                    Telephone = r.Field<string>("Telephone"),
+                }).ToList();
+            
+            var exceptCustomers = updateCustomers.Except(dbCustomers, new CustomerCompare()).ToList();
+            if (!exceptCustomers.Any())
+            {
+                MessageBox.Show("資料無做任何異動");
+                return;
+            } 
+            #endregion
+            Console.WriteLine("");
+
+            #region 轉成要寫入資料
+            System.Data.DataTable dtInsert = new System.Data.DataTable();
+            DataColumn[] dataColumns = new DataColumn[]
+            {
+                new DataColumn("CustomerCode",typeof(string)),
+                new DataColumn("Customer",typeof(string)),
+                new DataColumn("Telephone",typeof(string)),
+                new DataColumn("Address",typeof(string)),
+                new DataColumn("Email",typeof(string)),
+                new DataColumn("LastChangeTime",typeof(string)),
+            };
+            dtInsert.Columns.AddRange(dataColumns);
+            var rowInserts = exceptCustomers.Select(r =>
+            {
+                object[] arr = new object[6];
+                arr[0] = r.CustomerCode;
+                arr[1] = r.Customer;
+                arr[2] = r.Telephone;
+                arr[3] = r.Address;
+                arr[4] = r.Email;
+
+                arr[5] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                return arr;
+            }).ToList();
+
+            rowInserts.ForEach(r => { dtInsert.Rows.Add(r); });
+            #endregion
+
+            Console.WriteLine("");
+
+            #region 組合刪除SQL
+
+            var deleteCustCodes = dbCustomers.Except(updateCustomers, new CustomerCodeCompare())
+                .Select(r => r.CustomerCode).ToList();
+
+            var editCustCodes = exceptCustomers.Select(x => x.CustomerCode).ToList();
+            var codes = deleteCustCodes.Concat(editCustCodes).ToList();
+
+            Console.WriteLine("");
+
+            var delCustomerCode = codes.Aggregate(new StringBuilder(),
+                (cur, next) => cur.Append("'").Append(next).Append("'").Append(",")).ToString();
+            delCustomerCode = delCustomerCode.Substring(0, delCustomerCode.Length -1);
+            //刪除組合出要刪掉標的
+            var deleteAllSQL = @"Delete FROM [Customer] WHERE CustomerCode IN (" + delCustomerCode + ")";
+            #endregion
+
+            Console.Write(deleteAllSQL);
+
+            #region 寫入資料庫
+            this._dbContext.ExcuteBulkCopy(deleteAllSQL,
+                    new List<Tuple<string, System.Data.DataTable>>
+                    {
+                    new Tuple<string, System.Data.DataTable>("Customer",dtInsert)
+                    });
 
             if (this._dbContext.Err != "")
             {
@@ -328,114 +405,16 @@ namespace MiniERP
                 MessageBox.Show("資料庫寫入成功");
             }
 
-            //rollback 重新載入datagridview
-
-
-            #region //謙寫的不能動的程式碼
-            //var selectSQL = string.Format(@"SELECT [CustomerCode]
-            //                                          ,[Customer]
-            //                                          ,[Telephone]
-            //                                          ,[Address]
-            //                                          ,[Email]
-            //                                      FROM [{0}].[dbo].[Customer]", DbContext.DbName);
-
-            //System.Data.DataTable dtBegin = DbContext.SelectDb(selectSQL);
-
-            //DataTable dtUpdate = (DataTable)this.bindingSource1.DataSource;
-
-            //dtUpdate.AcceptChanges();
-
-
-            //Console.WriteLine("");
-
-            //Func<DataRow, CustomerModel> map = (r) => 
-            //{
-            //    return new CustomerModel 
-            //    { 
-            //        Customer = r.Field<string>("Customer"),
-            //        CustomerCode = r.Field<string>("CustomerCode"),
-            //        Address = r.Field<string>("Address"),
-            //        Email = r.Field<string>("Email"),
-            //        Telephone = r.Field<string>("Telephone"),
-            //    };
-            //};
-
-            //var begins = dtBegin.AsEnumerable().Select(map).ToList();
-            //var updates = dtUpdate.AsEnumerable().Select(map).ToList();
-
-            //Console.WriteLine();
-
-
-            //var cmpResults = updates.Except(begins,new CustomerCompare()).ToList();
-
-            //var customerID = cmpResults.Aggregate(new StringBuilder(),
-            //    (cur,next) => cur.Append("'").Append(next.CustomerCode).Append("'").Append(",")).ToString();
-
-
-
-            //customerID = customerID.Substring(0, customerID.Length - 1);
-
-
-
-
-            //var deleteSQL = string.Format(@"DELETE FROM [MiniERP].[dbo].[Customer]
-            //                                WHERE [CustomerCode] IN ({0})", customerID);
-
-            //var dtInsert = new DataTable();
-            //var columns = new DataColumn[] 
-            //{ 
-            //    new DataColumn("CustomerCode",typeof(string)),
-            //    new DataColumn("Customer",typeof(string)),
-            //    new DataColumn("Telephone",typeof(string)),
-            //    new DataColumn("Address",typeof(string)),
-            //    new DataColumn("Email",typeof(string)),
-            //    new DataColumn("LastChangeTime",typeof(DateTime)),
-            //};
-
-            //var rows = cmpResults.Select(r =>
-            //{
-            //    object[] arr = new object[] 
-            //    { 
-            //        r.CustomerCode,
-            //        r.Customer,
-            //        r.Telephone,
-            //        r.Address,
-            //        r.Email,
-            //        DateTime.Now                
-            //    };
-            //    return arr;
-
-            //}).ToList();
-
-            //dtInsert.Columns.AddRange(columns);
-            //rows.ForEach(r => { dtInsert.Rows.Add(r); });
-
-
-            //CommittableTransaction transaction = new CommittableTransaction();
-
-            //DbContext.Con.Open();
-            //DbContext.Con.EnlistTransaction(transaction);
-
-            //try
-            //{
-            //    DbContext.writeDb(deleteSQL);
-            //    DbContext.sqlBulkCopyDb("Customer", dtInsert);
-            //    transaction.Commit();
-            //    MessageBox.Show("更新成功");
-
-            //}
-            //catch (Exception)
-            //{
-            //    transaction.Rollback();
-            //    MessageBox.Show("更新失敗");
-            //}
-            //finally
-            //{
-            //    DbContext.Con.Close();
-            //}
-
-            //Console.WriteLine(); 
             #endregion
+            Console.WriteLine("");
+            
+            #region rollback 重新載入datagridview
+            System.Data.DataTable customerData = this._dbContext.Select(this._customerSQL);
+            this.bindingSource1.DataSource = customerData;
+            this.dataGridView1.DataSource = this.bindingSource1.DataSource;
+            #endregion
+            Console.WriteLine("");
+            
 
         }
         /// <summary>
