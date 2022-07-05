@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniERP", "MiniERP\MiniERP.csproj", "{138963F4-0CC7-4BB5-804D-0F7109F0F367}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FatherForm", "..\FatherForm\FatherForm\FatherForm.csproj", "{38D7635B-08E7-464E-8403-47243DB8B0D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FatherForm", "..\FatherForm\FatherForm.csproj", "{2193E662-3CC0-4FC5-9BD3-27E87A4AAE17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{138963F4-0CC7-4BB5-804D-0F7109F0F367}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{138963F4-0CC7-4BB5-804D-0F7109F0F367}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{138963F4-0CC7-4BB5-804D-0F7109F0F367}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38D7635B-08E7-464E-8403-47243DB8B0D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38D7635B-08E7-464E-8403-47243DB8B0D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38D7635B-08E7-464E-8403-47243DB8B0D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38D7635B-08E7-464E-8403-47243DB8B0D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2193E662-3CC0-4FC5-9BD3-27E87A4AAE17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2193E662-3CC0-4FC5-9BD3-27E87A4AAE17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2193E662-3CC0-4FC5-9BD3-27E87A4AAE17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2193E662-3CC0-4FC5-9BD3-27E87A4AAE17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

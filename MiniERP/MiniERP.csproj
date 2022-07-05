@@ -139,8 +139,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\FatherForm\FatherForm\FatherForm.csproj">
-      <Project>{38d7635b-08e7-464e-8403-47243db8b0d7}</Project>
+    <ProjectReference Include="..\..\FatherForm\FatherForm.csproj">
+      <Project>{2193e662-3cc0-4fc5-9bd3-27e87a4aae17}</Project>
       <Name>FatherForm</Name>
     </ProjectReference>
   </ItemGroup>
