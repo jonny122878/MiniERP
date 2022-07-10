@@ -26,7 +26,9 @@ namespace MiniERP
         private string _customerSQL;
         private string _quotationSQL;
         private List<string> _delCodes = new List<string>();
+        private List<KeyValuePair<string,string>> _editCodes = new List<KeyValuePair<string, string>>();
         private string _tmpCode;
+        private int _tmpIdx;
         public Form1()
         {
             InitializeComponent();
@@ -173,7 +175,10 @@ namespace MiniERP
             //{
             //    this.RollBackMSSQL();
             //}
-            
+            System.Data.DataTable customerData = this._dbContext.Select(this._customerSQL);
+            this.bindingSource1.DataSource = customerData;
+            System.Data.DataTable quotationData = this._dbContext.Select(this._quotationSQL);
+            this.bindingSource2.DataSource = quotationData;
 
             this.bindingNavigator1.BindingSource = this.bindingSource1;
             this.dataGridView1.DataSource = this.bindingSource1;
@@ -187,14 +192,13 @@ namespace MiniERP
         {
             if (this.tabControl1.SelectedTab.ToString() == "TabPage: {" + tabPage2.Text + "}")
             {
-                System.Data.DataTable customerData = this._dbContext.Select(this._customerSQL);
-                this.bindingSource1.DataSource = customerData;
+                
             }
 
             if (this.tabControl1.SelectedTab.ToString() == "TabPage: {" + tabPage3.Text + "}")
-            {                
-                System.Data.DataTable quotationData = this._dbContext.Select(this._quotationSQL);
-                this.bindingSource2.DataSource = quotationData;
+            {
+                this.toolStripButton3_Click(null,null);
+                
             }
 
 
@@ -310,7 +314,28 @@ namespace MiniERP
             }
             #endregion
             Console.WriteLine("");
-            
+
+
+            #region 更新報價單SQL
+            var groupQuotationSQL = string.Format(@"SELECT CustomerCode FROM Quotation GROUP BY CustomerCode");
+            var groupQuotations = this._dbContext.Select(groupQuotationSQL).AsEnumerable().Select(r => r.Field<string>("CustomerCode"));
+
+            var updateCodes = groupQuotations.Join(this._editCodes,
+                inner => inner,
+                outer => outer.Key,
+                (inner, outer) => outer).ToList();
+
+            var updateSQL = updateCodes.Select(r =>
+            {
+                var tmpSQL = string.Format(@"UPDATE Quotation 
+                                            SET CustomerCode = '{0}' 
+                                            WHERE CustomerCode = '{1}'", r.Value, r.Key);
+                return tmpSQL;
+            }).Aggregate(new StringBuilder(), (cur, next) => cur.Append(next).Append(";")).ToString();
+            //updateSQL = updateSQL.Substring(0, updateSQL.Length - 1); 
+            #endregion
+
+            Console.WriteLine("");
 
             #region 找出要更新資料
             var customerSQL = "SELECT * FROM Customer";
@@ -389,12 +414,14 @@ namespace MiniERP
                 (cur, next) => cur.Append("'").Append(next).Append("'").Append(",")).ToString();
             delCustomerCode = delCustomerCode.Substring(0, delCustomerCode.Length -1);
             //刪除組合出要刪掉標的
-            var deleteAllSQL = @"Delete FROM [Customer] WHERE CustomerCode IN (" + delCustomerCode + ")";
+            var deleteAllSQL = @"Delete FROM [Customer] WHERE CustomerCode IN (" + delCustomerCode + ");";            
             #endregion
 
             Console.Write(deleteAllSQL);
 
             #region 寫入資料庫
+            //更新欄位SQL
+            deleteAllSQL = deleteAllSQL + updateSQL;
             this._dbContext.ExcuteBulkCopy(deleteAllSQL,
                     new List<Tuple<string, System.Data.DataTable>>
                     {
@@ -415,7 +442,10 @@ namespace MiniERP
 
             #region rollback 重新載入datagridview
             this.toolStripButton3_Click(null,null);
-
+            System.Data.DataTable quotationData = this._dbContext.Select(this._quotationSQL);
+            this.bindingSource2.DataSource = quotationData;            
+            this.bindingNavigator2.BindingSource = this.bindingSource2;
+            this.dataGridView2.DataSource = this.bindingSource2;
 
             #endregion
             Console.WriteLine("");
@@ -629,6 +659,11 @@ namespace MiniERP
             form3.Show();
         }
 
+        private void bindingNavigatorAddNewItem_Click(object sender, EventArgs e)
+        {
+            this.bindingSource1.AddNew();
+            this.bindingSource1.MoveLast();
+        }
         private void bindingNavigatorDeleteItem_Click(object sender, EventArgs e)
         {
            
@@ -642,7 +677,8 @@ namespace MiniERP
             var delIncludeReports = this._delCodes.Where(r => r != "").Join(dtReport.AsEnumerable(),
                 inner => inner,
                 outer => outer.Field<string>("CustomerCode").ToString(),
-                (inner, outer) => inner).ToList();
+                (inner, outer) => inner).
+                Where(r => r == this._tmpCode).ToList();
 
             if (delIncludeReports.Any())
             {
@@ -651,54 +687,42 @@ namespace MiniERP
             }
             else
             {
-                this.bindingSource1.RemoveCurrent();
+               
+                this.bindingSource1.RemoveAt(this._tmpIdx);
             }
 
             Console.Write("");
         }
 
-        private void bindingNavigatorAddNewItem_Click(object sender, EventArgs e)
-        {
-            
-        }
+       
+    
 
-        private void dataGridView1_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
-        {
-
-            var rows = (DataGridViewRow)this.dataGridView1.CurrentRow;
-            //var rows = (System.Data.DataRowView) this.bindingNavigator1.DeleteItem.;
-            
-        }
-
-        private void dataGridView1_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
-        {
-            var rows = (DataGridViewRow)this.dataGridView1.CurrentRow;
-            //var rows = (System.Data.DataRowView) this.bindingNavigator1.DeleteItem.;
-            var code = rows.Cells[0].ToString();
-            this._delCodes.Add(code);
-            Console.Write(code);
-        }
-
-        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
-        {
-            
-        }
-
+ 
+        /// <summary>
+        /// 紀錄datagridview選取列
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             this._tmpCode = this.dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
+            this._tmpIdx = e.RowIndex;
             Console.Write("");
         }
 
-        private void bindingNavigator1_RefreshItems(object sender, EventArgs e)
+        private void dataGridView1_RowValidated(object sender, DataGridViewCellEventArgs e)
         {
-
+            
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView1_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
-
+            var editCode = this.dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
+            this._editCodes.Add(new KeyValuePair<string, string>(this._tmpCode, editCode));
+            Console.WriteLine("");
         }
+
+        
     }
 
 }
