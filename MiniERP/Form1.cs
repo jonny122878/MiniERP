@@ -25,6 +25,8 @@ namespace MiniERP
         private string _SQLiteDbName;
         private string _customerSQL;
         private string _quotationSQL;
+        private List<string> _delCodes = new List<string>();
+        private string _tmpCode;
         public Form1()
         {
             InitializeComponent();
@@ -251,7 +253,8 @@ namespace MiniERP
             
             System.Data.DataTable customerData = this._dbContext.Select(this._customerSQL);
             this.bindingSource1.DataSource = customerData;
-
+            this.dataGridView1.DataSource = this.bindingSource1.DataSource;
+            this._delCodes.Clear();
         }
 
         /// <summary>
@@ -261,6 +264,8 @@ namespace MiniERP
         /// <param name="e"></param>
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
+            
+
             //string strTest = null;
             //object obTest = strTest;
 
@@ -272,7 +277,27 @@ namespace MiniERP
             System.Data.DataTable dtUpdate = (System.Data.DataTable)this.bindingSource1.DataSource;
 
             dtUpdate.AcceptChanges();
+            #region 防呆資料有含空白
+            var rows = dtUpdate.AsEnumerable().Select((r, idx) =>
+            {
+                //take5 最後變更時間不檢查
+                var lists = r.ItemArray.Take(5).Select(c =>
+                {
+                    var val = (c == null) ? "" : c.ToString();
+                    return val;
+                }).ToList();
+                return new Tuple<int, List<string>>(idx + 1, lists);
+            }).ToList();
+            var validRows = rows.FirstOrDefault(c => c.Item2.Any(cc => cc == ""));
 
+            if (validRows != null)
+            {
+                MessageBox.Show("第" + validRows.Item1.ToString() + "列含有空白資料");
+                return;
+            }
+
+            #endregion
+            Console.WriteLine("");
             #region 防呆客戶編號為有重複值
             if (dtUpdate.AsEnumerable().GroupBy(r => r.Field<string>("CustomerCode"))
                     .Any(r => r.Count() > 1)
@@ -285,27 +310,7 @@ namespace MiniERP
             }
             #endregion
             Console.WriteLine("");
-            #region 防呆資料有含空白
-            var rows = dtUpdate.AsEnumerable().Select((r, idx) =>
-                {
-                    //take5 最後變更時間不檢查
-                    var lists = r.ItemArray.Take(5).Select(c =>
-                    {
-                        var val = (c == null) ? "" : c.ToString();
-                        return val;
-                    }).ToList();
-                    return new Tuple<int, List<string>>(idx + 1, lists);
-                }).ToList();
-            var validRows = rows.FirstOrDefault(c => c.Item2.Any(cc => cc == ""));
-
-            if (validRows != null)
-            {
-                MessageBox.Show("第" + validRows.Item1.ToString() + "列含有空白資料");
-                return;
-            }
-
-            #endregion
-            Console.WriteLine("");
+            
 
             #region 找出要更新資料
             var customerSQL = "SELECT * FROM Customer";
@@ -332,11 +337,11 @@ namespace MiniERP
                 }).ToList();
             
             var exceptCustomers = updateCustomers.Except(dbCustomers, new CustomerCompare()).ToList();
-            if (!exceptCustomers.Any())
-            {
-                MessageBox.Show("資料無做任何異動");
-                return;
-            } 
+            //if (!exceptCustomers.Any())
+            //{
+            //    MessageBox.Show("資料無做任何異動");
+            //    return;
+            //} 
             #endregion
             Console.WriteLine("");
 
@@ -407,11 +412,11 @@ namespace MiniERP
 
             #endregion
             Console.WriteLine("");
-            
+
             #region rollback 重新載入datagridview
-            System.Data.DataTable customerData = this._dbContext.Select(this._customerSQL);
-            this.bindingSource1.DataSource = customerData;
-            this.dataGridView1.DataSource = this.bindingSource1.DataSource;
+            this.toolStripButton3_Click(null,null);
+
+
             #endregion
             Console.WriteLine("");
             
@@ -623,7 +628,77 @@ namespace MiniERP
             form3.content = this.dataGridView2.CurrentCell.FormattedValue.ToString();
             form3.Show();
         }
-        
+
+        private void bindingNavigatorDeleteItem_Click(object sender, EventArgs e)
+        {
+           
+            //Console.Write("");
+            //var test = (System.Windows.Forms.ToolStripButton)sender;
+            //var rows = (System.Data.DataRowView)this.bindingSource1.Current;
+            //var code = rows.Cells[0].ToString();
+            this._delCodes.Add(this._tmpCode);
+            Console.Write("");
+            System.Data.DataTable dtReport = this._dbContext.Select(this._quotationSQL);
+            var delIncludeReports = this._delCodes.Where(r => r != "").Join(dtReport.AsEnumerable(),
+                inner => inner,
+                outer => outer.Field<string>("CustomerCode").ToString(),
+                (inner, outer) => inner).ToList();
+
+            if (delIncludeReports.Any())
+            {
+                MessageBox.Show("客戶資料在報價單含有資料，無法刪除");    
+                return;
+            }
+            else
+            {
+                this.bindingSource1.RemoveCurrent();
+            }
+
+            Console.Write("");
+        }
+
+        private void bindingNavigatorAddNewItem_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void dataGridView1_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+
+            var rows = (DataGridViewRow)this.dataGridView1.CurrentRow;
+            //var rows = (System.Data.DataRowView) this.bindingNavigator1.DeleteItem.;
+            
+        }
+
+        private void dataGridView1_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            var rows = (DataGridViewRow)this.dataGridView1.CurrentRow;
+            //var rows = (System.Data.DataRowView) this.bindingNavigator1.DeleteItem.;
+            var code = rows.Cells[0].ToString();
+            this._delCodes.Add(code);
+            Console.Write(code);
+        }
+
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            this._tmpCode = this.dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
+            Console.Write("");
+        }
+
+        private void bindingNavigator1_RefreshItems(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 
 }
