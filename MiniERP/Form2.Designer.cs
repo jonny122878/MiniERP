@@ -43,6 +43,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.cbCustomerCode = new System.Windows.Forms.ComboBox();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -112,10 +113,11 @@
             // 
             // txtCustomerCode
             // 
-            this.txtCustomerCode.Location = new System.Drawing.Point(127, 63);
+            this.txtCustomerCode.Location = new System.Drawing.Point(329, 63);
             this.txtCustomerCode.Name = "txtCustomerCode";
             this.txtCustomerCode.Size = new System.Drawing.Size(174, 29);
             this.txtCustomerCode.TabIndex = 7;
+            this.txtCustomerCode.Visible = false;
             // 
             // txtWorkingDays
             // 
@@ -184,11 +186,23 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(627, 60);
             this.flowLayoutPanel1.TabIndex = 15;
             // 
+            // cbCustomerCode
+            // 
+            this.cbCustomerCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbCustomerCode.FormattingEnabled = true;
+            this.cbCustomerCode.Location = new System.Drawing.Point(127, 66);
+            this.cbCustomerCode.Name = "cbCustomerCode";
+            this.cbCustomerCode.Size = new System.Drawing.Size(174, 26);
+            this.cbCustomerCode.TabIndex = 16;
+            this.cbCustomerCode.SelectedIndexChanged += new System.EventHandler(this.cbCustomerCode_SelectedIndexChanged);
+            this.cbCustomerCode.SelectedValueChanged += new System.EventHandler(this.cbCustomerCode_SelectedValueChanged);
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(627, 605);
+            this.Controls.Add(this.cbCustomerCode);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.richTextBoxContract);
@@ -229,5 +243,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.ComboBox cbCustomerCode;
     }
 }

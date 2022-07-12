@@ -589,8 +589,9 @@ namespace MiniERP
                 return;
             }
             //檔名特別處理成word
+            
             var pdfPath = Path.GetDirectoryName(saveFileDialog1.FileName);
-            var pdfFileNotExtension = Path.GetFileNameWithoutExtension(saveFileDialog1.FileName);
+            var pdfFileNotExtension = "temp";
             string saveFile = Path.Combine(pdfPath,pdfFileNotExtension + ".docx");
 
             var keyValues = this.GetWordKeyValues();

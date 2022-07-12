@@ -31,7 +31,8 @@ namespace MiniERP
 
         public IDbContext _dbContext;
         public string _SQLiteDbName;
-
+        private DataTable dtCustomer;
+        private bool _isFormLoad = false;
         public Form2()
         {
             InitializeComponent();            
@@ -59,16 +60,35 @@ namespace MiniERP
 
         private void Form2_Load(object sender, EventArgs e)
         {
+
+            
+
+
             this.txtQuotationNumber.Text = QuotationNumber;
             this.txtCustomerCode.Text = CustomerCode;
             this.txtWorkingDays.Text = WorkingDays;
             this.txtDeposit.Text = Deposit;
             this.txtFinalPayment.Text = FinalPayment;
             this.richTextBoxContract.Text = Contract;
+
+            dtCustomer = this._dbContext.Select("SELECT '' As CustomerCode UNION SELECT CustomerCode As CustomerCode FROM Customer");
+            Console.WriteLine("");
+            this.cbCustomerCode.LoadDataSoucre(dtCustomer, "CustomerCode");
+            this.cbCustomerCode.DisplayMember = "CustomerCode";
+            this.cbCustomerCode.ValueMember = "CustomerCode";
+            Console.WriteLine("");
+
+            var selectItem = dtCustomer.AsEnumerable().First(r => r.Field<string>("CustomerCode") == this.txtCustomerCode.Text);
+            Console.WriteLine("");
+            this.cbCustomerCode.SelectedValue = selectItem.ItemArray[0].ToString();
+            
+            Console.WriteLine("");
+
             if (mode == "update") 
             { 
                 this.txtQuotationNumber.Enabled = false;
             }
+            this._isFormLoad = true;
         }
         /// <summary>
         /// 儲存鈕
@@ -188,6 +208,29 @@ namespace MiniERP
 
             this.Close(); 
             #endregion
+        }
+
+        private void cbCustomerCode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void cbCustomerCode_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if(!this._isFormLoad)
+            {
+                return;
+            }
+            this.txtCustomerCode.Text = (string)this.cbCustomerCode.SelectedValue;
+             
+            //var selectIdx = dtCustomer.AsEnumerable().Select((r, idx) => {
+            //    var selectItem = (System.Data.DataRowView)this.cbCustomerCode.SelectedItem;
+            //    var row = selectItem.Row.Field<string>("CustomerCode");
+            //    var tmpIdx = (r.Field<string>("CustomerCode") == row) ? idx : 0;
+            //    return tmpIdx;
+            //}).First();
+            //Console.WriteLine("");
+            //this.cbCustomerCode.SelectedIndex = selectIdx;
         }
     }
 }
