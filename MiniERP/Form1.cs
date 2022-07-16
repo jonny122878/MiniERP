@@ -43,7 +43,9 @@ namespace MiniERP
 
             this._DbName = "MiniERP";
             this._SQLiteDbName = this._DbName + ".sqlite";
-            this._dbContext = new SQLiteDbContext(this._SQLiteDbName);
+            var testDb = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, this._SQLiteDbName);
+            this._dbContext = new SQLiteDbContext(testDb);
+            //this._dbContext = new SQLiteDbContext(this._SQLiteDbName);
             //this._dbMSSQLContext = new MSSQLDbContext("LAPTOP-H1031HR7\\SQLEXPRESS", this._DbName);
             this._customerSQL = @"SELECT [CustomerCode]
                                         ,[Customer]
