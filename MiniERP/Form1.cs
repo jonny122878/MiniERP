@@ -549,7 +549,7 @@ namespace MiniERP
             //從datagridview和db讀取資料
 
             //輸出word
-            string templateFile = Path.Combine(Directory.GetCurrentDirectory(), "報價單樣品.docx");
+            string templateFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "報價單樣品.docx");
             string saveFilePath = "";
             //Dialog命名文件
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
@@ -581,7 +581,7 @@ namespace MiniERP
             //copy word to pdf
 
             //delete word
-            string templateFile = Path.Combine(Directory.GetCurrentDirectory(), "報價單樣品.docx");
+            string templateFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "報價單樣品.docx");
             
             //Dialog命名文件
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
