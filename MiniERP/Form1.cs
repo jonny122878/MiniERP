@@ -170,6 +170,11 @@ namespace MiniERP
             #endregion
         }
 
+        private void RollBackSQLite()
+        {
+
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             //this.RollBackMSSQL();
