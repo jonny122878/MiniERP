@@ -15,6 +15,8 @@ using FatherForm.Controls;
 using FatherForm.Extensions;
 using Microsoft.Office.Interop.Word;
 using System.Configuration;
+using log4net;
+
 namespace MiniERP
 {
     public partial class Form1 : Form
@@ -29,9 +31,15 @@ namespace MiniERP
         private List<KeyValuePair<string,string>> _editCodes = new List<KeyValuePair<string, string>>();
         private string _tmpCode;
         private int _tmpIdx;
+        protected readonly ILog log;
         public Form1()
         {
             InitializeComponent();
+
+            var configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log4net.config");
+            log4net.Config.XmlConfigurator.ConfigureAndWatch(new FileInfo(configPath));
+            log = LogManager.GetLogger(typeof(Form1));
+
             //原始
             //this.tabPage1.Size = new System.Drawing.Size(830, 433);
             //控制this.tabControl1.Controls、this.bindingNavigator1.Items大小
@@ -297,12 +305,13 @@ namespace MiniERP
         /// <param name="e"></param>
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            
+
 
             //string strTest = null;
             //object obTest = strTest;
 
             //string result = strTest.ToString();
+            log.Info("儲存報價單變更開始");
             Console.WriteLine("");
             this.bindingSource1.EndEdit();
             var dialogResult = CannedMessage.DoubleCheck("是否儲存變更?");           
@@ -310,6 +319,7 @@ namespace MiniERP
             System.Data.DataTable dtUpdate = (System.Data.DataTable)this.bindingSource1.DataSource;
 
             dtUpdate.AcceptChanges();
+            log.Info("檢查報價單變更資料是否符合規範");
             #region 防呆資料有含空白
             var rows = dtUpdate.AsEnumerable().Select((r, idx) =>
             {
@@ -344,7 +354,7 @@ namespace MiniERP
             #endregion
             Console.WriteLine("");
 
-
+            log.Info("報價單變更資料轉移成SQL");
             #region 更新報價單SQL
             var groupQuotationSQL = string.Format(@"SELECT CustomerCode FROM Quotation GROUP BY CustomerCode");
             var groupQuotations = this._dbContext.Select(groupQuotationSQL).AsEnumerable().Select(r => r.Field<string>("CustomerCode"));
@@ -447,7 +457,7 @@ namespace MiniERP
             #endregion
 
             Console.Write(deleteAllSQL);
-
+            log.Info("寫入資料庫");
             #region 寫入資料庫
             //更新欄位SQL
             deleteAllSQL = deleteAllSQL + updateSQL;
@@ -478,8 +488,8 @@ namespace MiniERP
 
             #endregion
             Console.WriteLine("");
-            
 
+            log.Info("儲存報價單變更結束");
         }
         /// <summary>
         /// 報價單編輯
