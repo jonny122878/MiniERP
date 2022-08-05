@@ -192,6 +192,20 @@ namespace MiniERP
             this.dataGridView1.Columns[5].ReadOnly = true;
             this.bindingNavigator2.BindingSource = this.bindingSource2;
             this.dataGridView2.DataSource = this.bindingSource2;
+
+
+            //dataGridView1格式調整
+            for (int i = 0; i < this.dataGridView1.Columns.Count; i++)
+            {
+                this.dataGridView1.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+
+            }
+
+
+
+
+
+
         }
 
 
@@ -205,7 +219,15 @@ namespace MiniERP
             if (this.tabControl1.SelectedTab.ToString() == "TabPage: {" + tabPage3.Text + "}")
             {
                 this.toolStripButton3_Click(null,null);
-                
+
+                //dataGridView2格式調整
+                for (int i = 0; i < this.dataGridView2.Columns.Count; i++)
+                {
+                    this.dataGridView2.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+
+                }
+
+
             }
 
 
@@ -713,6 +735,10 @@ namespace MiniERP
         /// <param name="e"></param>
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            if(e.RowIndex == -1)
+            {
+                return;
+            }
             this._tmpCode = this.dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
             this._tmpIdx = e.RowIndex;
             Console.Write("");
@@ -730,7 +756,7 @@ namespace MiniERP
             Console.WriteLine("");
         }
 
-        
+
     }
 
 }

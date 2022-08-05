@@ -31,17 +31,9 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.CustomerCode_Customer = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Customer = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Telephone = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Address = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Email = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LastChangeTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bindingNavigator1 = new System.Windows.Forms.BindingNavigator(this.components);
-            this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorCountItem = new System.Windows.Forms.ToolStripLabel();
             this.bindingNavigatorMoveFirstItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMovePreviousItem = new System.Windows.Forms.ToolStripButton();
@@ -51,18 +43,13 @@
             this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.QuotationNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CustomerCode_QuotationNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.WorkingDays = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Deposit = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FinalPayment = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Contract = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bindingNavigator2 = new System.Windows.Forms.BindingNavigator(this.components);
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -80,6 +67,18 @@
             this.toolStripButton9 = new System.Windows.Forms.ToolStripButton();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.bindingSource2 = new System.Windows.Forms.BindingSource(this.components);
+            this.CustomerCode_Customer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Customer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Telephone = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Address = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Email = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LastChangeTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.QuotationNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CustomerCode_QuotationNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.WorkingDays = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Deposit = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FinalPayment = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Contract = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -95,7 +94,6 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -103,19 +101,9 @@
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.RightToLeftLayout = true;
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(838, 465);
+            this.tabControl1.Size = new System.Drawing.Size(1009, 536);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage1.Location = new System.Drawing.Point(4, 28);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(830, 433);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "小程式資訊";
             // 
             // tabPage2
             // 
@@ -125,7 +113,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 28);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(830, 433);
+            this.tabPage2.Size = new System.Drawing.Size(1001, 504);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "客戶管理";
             // 
@@ -150,65 +138,11 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 31;
-            this.dataGridView1.Size = new System.Drawing.Size(824, 388);
+            this.dataGridView1.Size = new System.Drawing.Size(995, 459);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValidated);
             this.dataGridView1.RowValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowValidated);
-            // 
-            // CustomerCode_Customer
-            // 
-            this.CustomerCode_Customer.DataPropertyName = "CustomerCode";
-            this.CustomerCode_Customer.HeaderText = "客戶編號";
-            this.CustomerCode_Customer.MinimumWidth = 8;
-            this.CustomerCode_Customer.Name = "CustomerCode_Customer";
-            this.CustomerCode_Customer.ReadOnly = true;
-            this.CustomerCode_Customer.Width = 91;
-            // 
-            // Customer
-            // 
-            this.Customer.DataPropertyName = "Customer";
-            this.Customer.HeaderText = "客戶";
-            this.Customer.MinimumWidth = 8;
-            this.Customer.Name = "Customer";
-            this.Customer.ReadOnly = true;
-            this.Customer.Width = 75;
-            // 
-            // Telephone
-            // 
-            this.Telephone.DataPropertyName = "Telephone";
-            this.Telephone.HeaderText = "電話";
-            this.Telephone.MinimumWidth = 8;
-            this.Telephone.Name = "Telephone";
-            this.Telephone.ReadOnly = true;
-            this.Telephone.Width = 75;
-            // 
-            // Address
-            // 
-            this.Address.DataPropertyName = "Address";
-            this.Address.HeaderText = "地址";
-            this.Address.MinimumWidth = 8;
-            this.Address.Name = "Address";
-            this.Address.ReadOnly = true;
-            this.Address.Width = 75;
-            // 
-            // Email
-            // 
-            this.Email.DataPropertyName = "Email";
-            this.Email.HeaderText = "E-mail";
-            this.Email.MinimumWidth = 8;
-            this.Email.Name = "Email";
-            this.Email.ReadOnly = true;
-            this.Email.Width = 91;
-            // 
-            // LastChangeTime
-            // 
-            this.LastChangeTime.DataPropertyName = "LastChangeTime";
-            this.LastChangeTime.HeaderText = "最後變更時間";
-            this.LastChangeTime.MinimumWidth = 8;
-            this.LastChangeTime.Name = "LastChangeTime";
-            this.LastChangeTime.ReadOnly = true;
-            this.LastChangeTime.Width = 108;
             // 
             // bindingNavigator1
             // 
@@ -239,20 +173,9 @@
             this.bindingNavigator1.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
             this.bindingNavigator1.Name = "bindingNavigator1";
             this.bindingNavigator1.PositionItem = this.bindingNavigatorPositionItem;
-            this.bindingNavigator1.Size = new System.Drawing.Size(824, 39);
+            this.bindingNavigator1.Size = new System.Drawing.Size(995, 39);
             this.bindingNavigator1.TabIndex = 0;
             this.bindingNavigator1.Text = "bindingNavigator1";
-            // 
-            // bindingNavigatorAddNewItem
-            // 
-            this.bindingNavigatorAddNewItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bindingNavigatorAddNewItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorAddNewItem.Image")));
-            this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
-            this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(34, 34);
-            this.bindingNavigatorAddNewItem.Text = "加入新的";
-            this.bindingNavigatorAddNewItem.Visible = false;
-            this.bindingNavigatorAddNewItem.Click += new System.EventHandler(this.bindingNavigatorAddNewItem_Click);
             // 
             // bindingNavigatorCountItem
             // 
@@ -327,6 +250,17 @@
             this.toolStripButton1.Text = "資料變更";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
+            // bindingNavigatorAddNewItem
+            // 
+            this.bindingNavigatorAddNewItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.bindingNavigatorAddNewItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorAddNewItem.Image")));
+            this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
+            this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
+            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(34, 34);
+            this.bindingNavigatorAddNewItem.Text = "加入新的";
+            this.bindingNavigatorAddNewItem.Visible = false;
+            this.bindingNavigatorAddNewItem.Click += new System.EventHandler(this.bindingNavigatorAddNewItem_Click);
+            // 
             // bindingNavigatorDeleteItem
             // 
             this.bindingNavigatorDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -372,7 +306,7 @@
             this.tabPage3.Controls.Add(this.bindingNavigator2);
             this.tabPage3.Location = new System.Drawing.Point(4, 28);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(830, 433);
+            this.tabPage3.Size = new System.Drawing.Size(1001, 504);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "報價單管理";
             // 
@@ -396,63 +330,9 @@
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersWidth = 62;
             this.dataGridView2.RowTemplate.Height = 31;
-            this.dataGridView2.Size = new System.Drawing.Size(830, 394);
+            this.dataGridView2.Size = new System.Drawing.Size(1001, 465);
             this.dataGridView2.TabIndex = 4;
             this.dataGridView2.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentDoubleClick);
-            // 
-            // QuotationNumber
-            // 
-            this.QuotationNumber.DataPropertyName = "QuotationNumber";
-            this.QuotationNumber.HeaderText = "報價單編號";
-            this.QuotationNumber.MinimumWidth = 8;
-            this.QuotationNumber.Name = "QuotationNumber";
-            this.QuotationNumber.ReadOnly = true;
-            this.QuotationNumber.Width = 134;
-            // 
-            // CustomerCode_QuotationNumber
-            // 
-            this.CustomerCode_QuotationNumber.DataPropertyName = "CustomerCode";
-            this.CustomerCode_QuotationNumber.HeaderText = "客戶編號";
-            this.CustomerCode_QuotationNumber.MinimumWidth = 8;
-            this.CustomerCode_QuotationNumber.Name = "CustomerCode_QuotationNumber";
-            this.CustomerCode_QuotationNumber.ReadOnly = true;
-            this.CustomerCode_QuotationNumber.Width = 116;
-            // 
-            // WorkingDays
-            // 
-            this.WorkingDays.DataPropertyName = "WorkingDays";
-            this.WorkingDays.HeaderText = "預計工作日";
-            this.WorkingDays.MinimumWidth = 8;
-            this.WorkingDays.Name = "WorkingDays";
-            this.WorkingDays.ReadOnly = true;
-            this.WorkingDays.Width = 134;
-            // 
-            // Deposit
-            // 
-            this.Deposit.DataPropertyName = "Deposit";
-            this.Deposit.HeaderText = "訂金";
-            this.Deposit.MinimumWidth = 8;
-            this.Deposit.Name = "Deposit";
-            this.Deposit.ReadOnly = true;
-            this.Deposit.Width = 80;
-            // 
-            // FinalPayment
-            // 
-            this.FinalPayment.DataPropertyName = "FinalPayment";
-            this.FinalPayment.HeaderText = "尾款";
-            this.FinalPayment.MinimumWidth = 8;
-            this.FinalPayment.Name = "FinalPayment";
-            this.FinalPayment.ReadOnly = true;
-            this.FinalPayment.Width = 80;
-            // 
-            // Contract
-            // 
-            this.Contract.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Contract.DataPropertyName = "Contract";
-            this.Contract.HeaderText = "報價單內容";
-            this.Contract.MinimumWidth = 8;
-            this.Contract.Name = "Contract";
-            this.Contract.ReadOnly = true;
             // 
             // bindingNavigator2
             // 
@@ -483,7 +363,7 @@
             this.bindingNavigator2.MovePreviousItem = this.toolStripButton11;
             this.bindingNavigator2.Name = "bindingNavigator2";
             this.bindingNavigator2.PositionItem = this.toolStripTextBox1;
-            this.bindingNavigator2.Size = new System.Drawing.Size(830, 39);
+            this.bindingNavigator2.Size = new System.Drawing.Size(1001, 39);
             this.bindingNavigator2.TabIndex = 3;
             this.bindingNavigator2.Text = "bindingNavigator3";
             // 
@@ -605,11 +485,121 @@
             this.toolStripButton9.Text = "匯出PDF";
             this.toolStripButton9.Click += new System.EventHandler(this.toolStripButton9_Click);
             // 
+            // CustomerCode_Customer
+            // 
+            this.CustomerCode_Customer.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.CustomerCode_Customer.DataPropertyName = "CustomerCode";
+            this.CustomerCode_Customer.HeaderText = "客戶編號";
+            this.CustomerCode_Customer.MinimumWidth = 8;
+            this.CustomerCode_Customer.Name = "CustomerCode_Customer";
+            this.CustomerCode_Customer.ReadOnly = true;
+            this.CustomerCode_Customer.Width = 116;
+            // 
+            // Customer
+            // 
+            this.Customer.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Customer.DataPropertyName = "Customer";
+            this.Customer.HeaderText = "客戶";
+            this.Customer.MinimumWidth = 8;
+            this.Customer.Name = "Customer";
+            this.Customer.ReadOnly = true;
+            this.Customer.Width = 80;
+            // 
+            // Telephone
+            // 
+            this.Telephone.DataPropertyName = "Telephone";
+            this.Telephone.HeaderText = "電話";
+            this.Telephone.MinimumWidth = 8;
+            this.Telephone.Name = "Telephone";
+            this.Telephone.ReadOnly = true;
+            this.Telephone.Width = 80;
+            // 
+            // Address
+            // 
+            this.Address.DataPropertyName = "Address";
+            this.Address.HeaderText = "地址";
+            this.Address.MinimumWidth = 8;
+            this.Address.Name = "Address";
+            this.Address.ReadOnly = true;
+            this.Address.Width = 80;
+            // 
+            // Email
+            // 
+            this.Email.DataPropertyName = "Email";
+            this.Email.HeaderText = "E-mail";
+            this.Email.MinimumWidth = 8;
+            this.Email.Name = "Email";
+            this.Email.ReadOnly = true;
+            this.Email.Width = 91;
+            // 
+            // LastChangeTime
+            // 
+            this.LastChangeTime.DataPropertyName = "LastChangeTime";
+            this.LastChangeTime.HeaderText = "最後變更時間";
+            this.LastChangeTime.MinimumWidth = 8;
+            this.LastChangeTime.Name = "LastChangeTime";
+            this.LastChangeTime.ReadOnly = true;
+            this.LastChangeTime.Width = 108;
+            // 
+            // QuotationNumber
+            // 
+            this.QuotationNumber.DataPropertyName = "QuotationNumber";
+            this.QuotationNumber.HeaderText = "報價單編號";
+            this.QuotationNumber.MinimumWidth = 8;
+            this.QuotationNumber.Name = "QuotationNumber";
+            this.QuotationNumber.ReadOnly = true;
+            this.QuotationNumber.Width = 134;
+            // 
+            // CustomerCode_QuotationNumber
+            // 
+            this.CustomerCode_QuotationNumber.DataPropertyName = "CustomerCode";
+            this.CustomerCode_QuotationNumber.HeaderText = "客戶編號";
+            this.CustomerCode_QuotationNumber.MinimumWidth = 8;
+            this.CustomerCode_QuotationNumber.Name = "CustomerCode_QuotationNumber";
+            this.CustomerCode_QuotationNumber.ReadOnly = true;
+            this.CustomerCode_QuotationNumber.Width = 116;
+            // 
+            // WorkingDays
+            // 
+            this.WorkingDays.DataPropertyName = "WorkingDays";
+            this.WorkingDays.HeaderText = "預計工作日";
+            this.WorkingDays.MinimumWidth = 8;
+            this.WorkingDays.Name = "WorkingDays";
+            this.WorkingDays.ReadOnly = true;
+            this.WorkingDays.Width = 134;
+            // 
+            // Deposit
+            // 
+            this.Deposit.DataPropertyName = "Deposit";
+            this.Deposit.HeaderText = "訂金";
+            this.Deposit.MinimumWidth = 8;
+            this.Deposit.Name = "Deposit";
+            this.Deposit.ReadOnly = true;
+            this.Deposit.Width = 80;
+            // 
+            // FinalPayment
+            // 
+            this.FinalPayment.DataPropertyName = "FinalPayment";
+            this.FinalPayment.HeaderText = "尾款";
+            this.FinalPayment.MinimumWidth = 8;
+            this.FinalPayment.Name = "FinalPayment";
+            this.FinalPayment.ReadOnly = true;
+            this.FinalPayment.Width = 80;
+            // 
+            // Contract
+            // 
+            this.Contract.DataPropertyName = "Contract";
+            this.Contract.HeaderText = "報價單內容";
+            this.Contract.MinimumWidth = 8;
+            this.Contract.Name = "Contract";
+            this.Contract.ReadOnly = true;
+            this.Contract.Width = 134;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(838, 465);
+            this.ClientSize = new System.Drawing.Size(1009, 536);
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
             this.Text = "MiniERP";
@@ -636,7 +626,6 @@
         #endregion
 
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.TabPage tabPage3;
@@ -673,18 +662,18 @@
         private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator2;
         private System.Windows.Forms.ToolStripButton toolStripButton8;
         private System.Windows.Forms.DataGridView dataGridView2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn QuotationNumber;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CustomerCode_QuotationNumber;
-        private System.Windows.Forms.DataGridViewTextBoxColumn WorkingDays;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Deposit;
-        private System.Windows.Forms.DataGridViewTextBoxColumn FinalPayment;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Contract;
         private System.Windows.Forms.DataGridViewTextBoxColumn CustomerCode_Customer;
         private System.Windows.Forms.DataGridViewTextBoxColumn Customer;
         private System.Windows.Forms.DataGridViewTextBoxColumn Telephone;
         private System.Windows.Forms.DataGridViewTextBoxColumn Address;
         private System.Windows.Forms.DataGridViewTextBoxColumn Email;
         private System.Windows.Forms.DataGridViewTextBoxColumn LastChangeTime;
+        private System.Windows.Forms.DataGridViewTextBoxColumn QuotationNumber;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CustomerCode_QuotationNumber;
+        private System.Windows.Forms.DataGridViewTextBoxColumn WorkingDays;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Deposit;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FinalPayment;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Contract;
     }
 }
 
